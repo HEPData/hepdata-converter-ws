@@ -1,2 +1,3 @@
 # hepdata-converter-ws
-Flask web services for hepdata-converter
+
+Simple Flask Web Services wrapper for hepdata-converter (https://github.com/HEPData/hepdata-converter)
