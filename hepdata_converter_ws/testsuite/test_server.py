@@ -4,8 +4,7 @@ from distlib._backport import tarfile
 import os
 import tarfile
 from flask import jsonify, json
-from hepdata_converter.testsuite import insert_data_as_str, insert_path
-from hepdata_converter.testsuite.test_writer import WriterTestSuite
+from hepdata_converter.testsuite import insert_data_as_str, insert_path, TMPDirMixin, ExtendedTestCase
 
 import hepdata_converter_ws
 import unittest
@@ -14,11 +13,12 @@ from hepdata_converter_ws.testsuite import insert_data_as_tar_base64, insert_dat
 __author__ = 'Michał Szostak'
 
 
-class HepdataConverterWSTestCase(WriterTestSuite):
+class HepdataConverterWSTestCase(TMPDirMixin, ExtendedTestCase):
     def setUp(self):
         super(HepdataConverterWSTestCase, self).setUp()
-        hepdata_converter_ws.app.config['TESTING'] = True
-        self.app = hepdata_converter_ws.app.test_client()
+        self.app = hepdata_converter_ws.create_app()
+        self.app.config['TESTING'] = True
+        self.app_client = self.app.test_client()
 
     def tearDown(self):
         super(HepdataConverterWSTestCase, self).tearDown()
@@ -26,7 +26,7 @@ class HepdataConverterWSTestCase(WriterTestSuite):
     @insert_data_as_tar_base64('oldhepdata/sample.input')
     @insert_path('oldhepdata/yaml')
     def test_convert(self, hepdata_input_tar, yaml_path):
-        r = self.app.get('/convert', data=json.dumps({'input': hepdata_input_tar,
+        r = self.app_client.get('/convert', data=json.dumps({'input': hepdata_input_tar,
                                                       'options': {'input_format': 'oldhepdata', 'output_format': 'yaml'}}),
                          headers={'content-type': 'application/json'})
 
