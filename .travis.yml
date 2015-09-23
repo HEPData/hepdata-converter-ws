@@ -18,7 +18,6 @@ after_success:
 - coveralls
 
 deploy:
-  edge: true
   provider: pypi
   user: hepdata
   password:
