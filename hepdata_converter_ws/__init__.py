@@ -30,4 +30,4 @@ def main():
         sys.exit()
 
     app = create_app()
-    app.run()
+    app.run(host='0.0.0.0')
