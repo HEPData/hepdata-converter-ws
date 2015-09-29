@@ -14,6 +14,9 @@ api = Blueprint('api', __name__)
 
 __author__ = 'Michał Szostak'
 
+@api.route('/ping', methods=['GET'])
+def ping():
+    return Response('OK')
 
 @api.route('/convert', methods=['GET'])
 def convert():
