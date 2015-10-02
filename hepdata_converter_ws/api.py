@@ -41,7 +41,7 @@ def convert():
 
         else:
             pass
-        hepdata_converter.convert(conversion_input, conversion_output, kwargs.get('options', {}))
+        hepdata_converter.convert(conversion_input  + '/hepdata-converter-ws-data/', conversion_output, kwargs.get('options', {}))
 
         with tarfile.open(mode='w:gz', fileobj=output) as tar:
             tar.add(conversion_output, arcname='hepdata-converter-ws-data')
