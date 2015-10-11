@@ -41,10 +41,19 @@ def convert():
 
         else:
             pass
-        hepdata_converter.convert(conversion_input  + '/hepdata-converter-ws-data/', conversion_output, kwargs.get('options', {}))
+        hepdata_converter.convert(conversion_input  + '/hepdata-converter-ws-data/',
+                                  conversion_output,
+                                  kwargs.get('options', {}))
+
+        output_format = kwargs.get('options', {}).get('output_format', '')
+
+        if not os.path.isdir(conversion_output):
+            arcname = 'hepdata-converter-ws-data.' + output_format
+        else:
+            arcname = 'hepdata-converter-ws-data'
 
         with tarfile.open(mode='w:gz', fileobj=output) as tar:
-            tar.add(conversion_output, arcname='hepdata-converter-ws-data')
+            tar.add(conversion_output, arcname=arcname)
 
     finally:
         shutil.rmtree(tmp_dir, ignore_errors=True)
