@@ -22,6 +22,7 @@ def ping():
 def convert():
     kwargs = request.get_json(force=True)
     input_tar = kwargs['input']
+    archive_name = kwargs['options'].get('filename', 'hepdata-converter-ws-data')
     output = StringIO.StringIO()
 
     tmp_output_dir = tempfile.mkdtemp()
@@ -41,19 +42,17 @@ def convert():
 
         else:
             pass
-        hepdata_converter.convert(conversion_input  + '/hepdata-converter-ws-data/',
+        hepdata_converter.convert(conversion_input + '/' + archive_name + '/',
                                   conversion_output,
                                   kwargs.get('options', {}))
 
         output_format = kwargs.get('options', {}).get('output_format', '')
 
         if not os.path.isdir(conversion_output):
-            arcname = 'hepdata-converter-ws-data.' + output_format
-        else:
-            arcname = 'hepdata-converter-ws-data'
+            archive_name = archive_name + '.' + output_format
 
         with tarfile.open(mode='w:gz', fileobj=output) as tar:
-            tar.add(conversion_output, arcname=arcname)
+            tar.add(conversion_output, arcname=archive_name)
 
     finally:
         shutil.rmtree(tmp_dir, ignore_errors=True)
