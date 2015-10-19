@@ -11,8 +11,9 @@ import shutil
 from flask import current_app, Blueprint, render_template
 api = Blueprint('api', __name__)
 
-
 __author__ = 'Michał Szostak'
+
+SINGLEFILE_FORMATS = ['root', 'yoda']
 
 @api.route('/ping', methods=['GET'])
 def ping():
@@ -23,13 +24,18 @@ def convert():
     kwargs = request.get_json(force=True)
     input_tar = kwargs['input']
     archive_name = kwargs['options'].get('filename', 'hepdata-converter-ws-data')
-    output = StringIO.StringIO()
+    output_format = kwargs['options'].get('output_format', '')
 
-    tmp_output_dir = tempfile.mkdtemp()
+    output = StringIO.StringIO()
+    if output_format.lower() in SINGLEFILE_FORMATS:
+        _os_handle, tmp_output = tempfile.mkstemp()
+    else:
+        tmp_output = tempfile.mkdtemp()
+
     tmp_dir = tempfile.mkdtemp()
     try:
         conversion_input = os.path.abspath(tmp_dir)
-        conversion_output = os.path.abspath(tmp_output_dir)
+        conversion_output = os.path.abspath(tmp_output)
 
         with tarfile.open(mode= "r:gz", fileobj=StringIO.StringIO(base64.decodestring(input_tar))) as tar:
             tar.extractall(path=conversion_input)
@@ -46,8 +52,6 @@ def convert():
                                   conversion_output,
                                   kwargs.get('options', {}))
 
-        output_format = kwargs.get('options', {}).get('output_format', '')
-
         if not os.path.isdir(conversion_output):
             archive_name = archive_name + '.' + output_format
 
@@ -56,6 +60,6 @@ def convert():
 
     finally:
         shutil.rmtree(tmp_dir, ignore_errors=True)
-        shutil.rmtree(tmp_output_dir, ignore_errors=True)
+        shutil.rmtree(tmp_output, ignore_errors=True)
 
     return Response(output.getvalue(), mimetype='application/x-gzip')
