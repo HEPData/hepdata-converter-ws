@@ -27,7 +27,7 @@ def convert():
     output_format = kwargs['options'].get('output_format', '')
 
     output = StringIO.StringIO()
-    if output_format.lower() in SINGLEFILE_FORMATS:
+    if output_format.lower() in SINGLEFILE_FORMATS or 'table' in kwargs['options']:
         _os_handle, tmp_output = tempfile.mkstemp()
     else:
         tmp_output = tempfile.mkdtemp()
