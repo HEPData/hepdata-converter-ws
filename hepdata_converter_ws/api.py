@@ -15,9 +15,11 @@ __author__ = 'Michał Szostak'
 
 SINGLEFILE_FORMATS = ['root', 'yoda']
 
+
 @api.route('/ping', methods=['GET'])
 def ping():
     return Response('OK')
+
 
 @api.route('/convert', methods=['GET'])
 def convert():
@@ -26,9 +28,9 @@ def convert():
     archive_name = kwargs['options'].get('filename', 'hepdata-converter-ws-data')
     output_format = kwargs['options'].get('output_format', '')
 
-    output = StringIO.StringIO()
+    output, os_handle = StringIO.StringIO(), None
     if output_format.lower() in SINGLEFILE_FORMATS or 'table' in kwargs['options']:
-        _os_handle, tmp_output = tempfile.mkstemp()
+        os_handle, tmp_output = tempfile.mkstemp()
     else:
         tmp_output = tempfile.mkdtemp()
 
@@ -59,6 +61,8 @@ def convert():
             tar.add(conversion_output, arcname=archive_name)
 
     finally:
+        if os_handle:
+            os.fdopen(os_handle).close()
         shutil.rmtree(tmp_dir, ignore_errors=True)
         shutil.rmtree(tmp_output, ignore_errors=True)
 
