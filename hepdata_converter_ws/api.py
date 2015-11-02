@@ -39,7 +39,7 @@ def convert():
         conversion_input = os.path.abspath(tmp_dir)
         conversion_output = os.path.abspath(tmp_output)
 
-        with tarfile.open(mode= "r:gz", fileobj=StringIO.StringIO(base64.decodestring(input_tar))) as tar:
+        with tarfile.open(mode="r:gz", fileobj=StringIO.StringIO(base64.decodestring(input_tar))) as tar:
             tar.extractall(path=conversion_input)
 
         # one file - treat it as one file input format
@@ -47,10 +47,10 @@ def convert():
         if len(walked) == 1 and len(walked[0][2]) == 1:
             path, dirs, files = walked[0]
             conversion_input = os.path.join(path, files[0])
-
         else:
-            pass
-        hepdata_converter.convert(conversion_input + '/' + archive_name + '/',
+            conversion_input = conversion_input + '/' + archive_name + '/'
+
+        hepdata_converter.convert(conversion_input,
                                   conversion_output,
                                   kwargs.get('options', {}))
 
