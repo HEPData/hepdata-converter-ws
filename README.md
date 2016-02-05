@@ -1,5 +1,7 @@
 # hepdata-converter-ws
 
+[![Join the chat at https://gitter.im/HEPData/hepdata-converter-ws](https://badges.gitter.im/HEPData/hepdata-converter-ws.svg)](https://gitter.im/HEPData/hepdata-converter-ws?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Simple Flask Web Services wrapper for hepdata-converter (https://github.com/HEPData/hepdata-converter)
 
 It allows running hepdata-converter as a web service on top of flask micro framework.
