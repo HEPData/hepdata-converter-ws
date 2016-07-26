@@ -2,7 +2,7 @@
 import base64
 import tarfile
 import cStringIO
-from hepdata_converter.testsuite import _parse_path_arguments, _construct_testdata_path
+from hepdata_converter.testsuite import _parse_path_arguments, construct_testdata_path
 
 __author__ = 'Michał Szostak'
 
@@ -16,7 +16,7 @@ class insert_data_as_tar_base64(object):
         def _inner(*args, **kwargs):
             data_stream = cStringIO.StringIO()
             with tarfile.open(mode='w:gz', fileobj=data_stream) as data:
-                data.add(_construct_testdata_path(self.sample_file_name), arcname=self.arcname)
+                data.add(construct_testdata_path(self.sample_file_name), arcname=self.arcname)
 
             args = list(args)
             args.append(base64.b64encode(data_stream.getvalue()))
@@ -34,7 +34,7 @@ class insert_data_as_tar(object):
         def _inner(*args, **kwargs):
             data_stream = cStringIO.StringIO()
             with tarfile.open(mode='w:gz', fileobj=data_stream) as data:
-                data.add(_construct_testdata_path(self.sample_file_name), arcname=self.arcname)
+                data.add(construct_testdata_path(self.sample_file_name), arcname=self.arcname)
 
             args = list(args)
             args.append(data_stream.getvalue())
