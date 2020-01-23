@@ -26,7 +26,7 @@ def create_app(config_filename=None):
 
 def main():
     if '-v' in sys.argv or '--version' in sys.argv:
-        print "hepdata-converter-ws version %s" % version.__version__
+        print("hepdata-converter-ws version %s" % version.__version__)
         sys.exit()
 
     app = create_app()
