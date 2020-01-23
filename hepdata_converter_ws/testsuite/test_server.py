@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-import cStringIO
+from io import StringIO
 from distlib._backport import tarfile
 import os
 import tarfile
@@ -54,7 +54,7 @@ class HepdataConverterWSTestCase(TMPDirMixin, ExtendedTestCase):
                                                       'options': {'input_format': 'oldhepdata', 'output_format': 'yaml'}}),
                          headers={'content-type': 'application/json'})
 
-        with tarfile.open(mode='r:gz', fileobj=cStringIO.StringIO(r.data)) as tar:
+        with tarfile.open(mode='r:gz', fileobj=StringIO(r.data)) as tar:
             tar.extractall(path=self.current_tmp)
 
         self.assertDirsEqual(os.path.join(self.current_tmp, 'hepdata-converter-ws-data'), yaml_path)
