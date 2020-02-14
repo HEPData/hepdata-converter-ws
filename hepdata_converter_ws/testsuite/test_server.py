@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-from io import StringIO
+from io import BytesIO
 from distlib._backport import tarfile
 import os
 import tarfile
@@ -50,11 +50,11 @@ class HepdataConverterWSTestCase(TMPDirMixin, ExtendedTestCase):
     @insert_data_as_tar_base64('oldhepdata/sample.input')
     @insert_path('oldhepdata/yaml')
     def test_convert(self, hepdata_input_tar, yaml_path):
-        r = self.app_client.get('/convert', data=json.dumps({'input': hepdata_input_tar,
+        r = self.app_client.get('/convert', data=json.dumps({'input': hepdata_input_tar.decode('utf-8'),
                                                       'options': {'input_format': 'oldhepdata', 'output_format': 'yaml'}}),
                          headers={'content-type': 'application/json'})
 
-        with tarfile.open(mode='r:gz', fileobj=StringIO(r.data)) as tar:
+        with tarfile.open(mode='r:gz', fileobj=BytesIO(r.data)) as tar:
             tar.extractall(path=self.current_tmp)
 
         self.assertDirsEqual(os.path.join(self.current_tmp, 'hepdata-converter-ws-data'), yaml_path)
