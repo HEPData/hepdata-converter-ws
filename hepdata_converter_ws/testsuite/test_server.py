@@ -27,12 +27,12 @@ class HepdataConverterWSTestCase(TMPDirMixin, ExtendedTestCase):
     def assertMultiLineAlmostEqual(self, first, second, msg=None):
         if hasattr(first, 'readlines'):
             lines = first.readlines()
-        elif isinstance(first, (str, unicode)):
+        elif isinstance(first, str):
             lines = first.split('\n')
 
         if hasattr(second, 'readlines'):
             orig_lines = second.readlines()
-        elif isinstance(second, (str, unicode)):
+        elif isinstance(second, str):
             orig_lines = second.split('\n')
 
         # Remove blank lines at end of files
@@ -43,7 +43,7 @@ class HepdataConverterWSTestCase(TMPDirMixin, ExtendedTestCase):
             orig_lines.pop()
 
         self.assertEqual(len(lines), len(orig_lines))
-        for i in xrange(len(lines)):
+        for i in range(len(lines)):
             self.assertEqual(lines[i].strip(), orig_lines[i].strip())
 
 
@@ -78,7 +78,7 @@ class HepdataConverterWSTestCase(TMPDirMixin, ExtendedTestCase):
             }),
             headers={'content-type': 'application/json'})
 
-        with tarfile.open(mode='r:gz', fileobj=cStringIO.StringIO(r.data)) as tar:
+        with tarfile.open(mode='r:gz', fileobj=BytesIO(r.data)) as tar:
             tar.extractall(path=self.current_tmp)
 
         self.assertEqual(len(os.listdir(self.current_tmp)), 1)
@@ -107,4 +107,4 @@ class HepdataConverterWSTestCase(TMPDirMixin, ExtendedTestCase):
                 }),
                 headers={'content-type': 'application/json'})
 
-        self.assertTrue("did not pass validation" in e.exception.message)
+        self.assertTrue("did not pass validation" in str(e.exception))
