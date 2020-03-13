@@ -11,8 +11,8 @@ install:
 - sudo pip install coveralls
 script:
 - export CURRENT_PATH=`pwd`
-- docker run -v $CURRENT_PATH:$CURRENT_PATH hepdata/hepdata-converter-ws /bin/bash -c "cd  $CURRENT_PATH && coverage run -m unittest discover hepdata_converter_ws/testsuite 'test_*'"
-- docker run -v $CURRENT_PATH:$CURRENT_PATH hepdata/hepdata-converter-ws /bin/bash -c "cd  $CURRENT_PATH && python setup.py install && hepdata-converter-ws -v"
+- docker run -v $CURRENT_PATH:$CURRENT_PATH hepdata/hepdata-converter /bin/bash -c "cd $CURRENT_PATH && pip install -I -e .[tests] && coverage run -m unittest discover hepdata_converter_ws/testsuite 'test_*'"
+- docker run -v $CURRENT_PATH:$CURRENT_PATH hepdata/hepdata-converter /bin/bash -c "cd $CURRENT_PATH && pip install -I -e . && hepdata-converter-ws -v"
 
 after_success:
 - coveralls

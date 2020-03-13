@@ -23,6 +23,30 @@ class HepdataConverterWSTestCase(TMPDirMixin, ExtendedTestCase):
     def tearDown(self):
         super(HepdataConverterWSTestCase, self).tearDown()
 
+
+    def assertMultiLineAlmostEqual(self, first, second, msg=None):
+        if hasattr(first, 'readlines'):
+            lines = first.readlines()
+        elif isinstance(first, (str, unicode)):
+            lines = first.split('\n')
+
+        if hasattr(second, 'readlines'):
+            orig_lines = second.readlines()
+        elif isinstance(second, (str, unicode)):
+            orig_lines = second.split('\n')
+
+        # Remove blank lines at end of files
+        while lines[-1].strip() == '':
+            lines.pop()
+
+        while orig_lines[-1].strip() == '':
+            orig_lines.pop()
+
+        self.assertEqual(len(lines), len(orig_lines))
+        for i in xrange(len(lines)):
+            self.assertEqual(lines[i].strip(), orig_lines[i].strip())
+
+
     @insert_data_as_tar_base64('oldhepdata/sample.input')
     @insert_path('oldhepdata/yaml')
     def test_convert(self, hepdata_input_tar, yaml_path):
@@ -34,3 +58,53 @@ class HepdataConverterWSTestCase(TMPDirMixin, ExtendedTestCase):
             tar.extractall(path=self.current_tmp)
 
         self.assertDirsEqual(os.path.join(self.current_tmp, 'hepdata-converter-ws-data'), yaml_path)
+
+
+    @insert_data_as_tar_base64('yaml_full')
+    @insert_data_as_str('csv/table_1.csv')
+    @insert_path('yaml_full')
+    def test_convert_yaml_v0(self, hepdata_input_tar, csv_content, yaml_path):
+        r = self.app_client.get(
+            '/convert',
+            data=json.dumps({
+                'input': hepdata_input_tar.decode('utf-8'),
+                'options': {
+                    'input_format': 'yaml',
+                    'output_format': 'csv',
+                    'table': 'Table 1',
+                    'pack': True,
+                    'validator_schema_version': '0.1.0'
+                }
+            }),
+            headers={'content-type': 'application/json'})
+
+        with tarfile.open(mode='r:gz', fileobj=cStringIO.StringIO(r.data)) as tar:
+            tar.extractall(path=self.current_tmp)
+
+        self.assertEqual(len(os.listdir(self.current_tmp)), 1)
+        output_file_path = os.path.join(self.current_tmp, os.listdir(self.current_tmp)[0])
+
+        with open(output_file_path, 'r') as f:
+            self.assertMultiLineAlmostEqual(f, csv_content)
+
+
+    @insert_data_as_tar_base64('yaml_full')
+    @insert_data_as_str('csv/table_1.csv')
+    @insert_path('yaml_full')
+    def test_convert_yaml_invalid_v1(self, hepdata_input_tar, csv_content, yaml_path):
+        with self.assertRaises(RuntimeError) as e:
+            r = self.app_client.get(
+                '/convert',
+                data=json.dumps({
+                    'input': hepdata_input_tar.decode('utf-8'),
+                    'options': {
+                        'input_format': 'yaml',
+                        'output_format': 'csv',
+                        'table': 'Table 1',
+                        'pack': True,
+                        'validator_schema_version': '1.0.0'
+                    }
+                }),
+                headers={'content-type': 'application/json'})
+
+        self.assertTrue("did not pass validation" in e.exception.message)

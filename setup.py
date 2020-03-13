@@ -16,8 +16,11 @@ setup(
     name='hepdata-converter-ws',
     version=get_version(),
     install_requires=[
-        'hepdata-converter',
-        'flask',
+        'hepdata-converter>=0.1.35,<0.2',
+        'flask>=1.1.1,<2'
+    ],
+    tests_require=[
+        'flask-testing'
     ],
     entry_points={
         'console_scripts': [
