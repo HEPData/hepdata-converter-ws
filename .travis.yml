@@ -23,9 +23,11 @@ script:
 after_success:
 - coveralls
 
+before_deploy:
+- export CURRENT_PATH=`pwd`
+- docker run -v $CURRENT_PATH:$CURRENT_PATH hepdata/hepdata-converter /bin/bash -c "cd $CURRENT_PATH && rm -rf build hepdata_converter_ws.egg-info"
+
 deploy:
-  skip_cleanup: true
-  overwrite: true
   provider: pypi
   user: "__token__"
   password:
