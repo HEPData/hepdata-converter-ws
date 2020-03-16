@@ -24,6 +24,8 @@ after_success:
 - coveralls
 
 deploy:
+  skip_cleanup: true
+  overwrite: true
   provider: pypi
   user: "__token__"
   password:
