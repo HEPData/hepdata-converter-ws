@@ -2,6 +2,13 @@
 from setuptools import setup
 import re
 
+test_requirements = [
+    'distlib',
+]
+
+extras_require = {
+    'tests': test_requirements,
+}
 
 def get_version():
     with open('hepdata_converter_ws/version.py', 'r') as version_f:
@@ -25,9 +32,8 @@ setup(
         'hepdata-converter>=0.1.35,<0.2',
         'flask>=1.1.1,<2'
     ],
-    tests_require=[
-        'flask-testing'
-    ],
+    extras_require=extras_require,
+    tests_require=test_requirements,
     entry_points={
         'console_scripts': [
             'hepdata-converter-ws = hepdata_converter_ws:main',
