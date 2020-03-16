@@ -12,6 +12,12 @@ def get_version():
         return '0.0.0'
     return r.group('version')
 
+
+# Get the long description from the README file
+with open('README.md', 'rt') as fp:
+    long_description = fp.read()
+
+
 setup(
     name='hepdata-converter-ws',
     version=get_version(),
@@ -28,10 +34,13 @@ setup(
         ]
     },
     packages=['hepdata_converter_ws'],
-    url='https://github.com/HEPData/hepdata-converter-ws/',
+    url='https://github.com/HEPData/hepdata-converter-ws',
     license='GPL',
-    author='Michał Szostak',
-    author_email='michal.florian.szostak@cern.ch',
+    author='HEPData Team',
+    author_email='info@hepdata.net',
     description='Flask webservices enabling usage of hepdata-converter as a separate server over the network',
     download_url='https://github.com/HEPData/hepdata-converter-ws/tarball/%s' % get_version(),
+    long_description=long_description,
+    long_description_content_type='text/markdown',
+    python_requires='<3'
 )

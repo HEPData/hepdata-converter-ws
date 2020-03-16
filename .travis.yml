@@ -1,14 +1,20 @@
 language: python
+
 python:
 - '2.7'
+
 sudo: required
+
 cache:
 - docker
+
 services:
 - docker
+
 install:
 - sudo pip install --upgrade pip
 - sudo pip install coveralls
+
 script:
 - export CURRENT_PATH=`pwd`
 - docker run -v $CURRENT_PATH:$CURRENT_PATH hepdata/hepdata-converter /bin/bash -c "cd $CURRENT_PATH && pip install -I -e .[tests] && coverage run -m unittest discover hepdata_converter_ws/testsuite 'test_*'"
@@ -19,10 +25,10 @@ after_success:
 
 deploy:
   provider: pypi
-  user: hepdata
+  user: "__token__"
   password:
-    secure: X5bMcItjHE9FL2CHZ1HEKA9XUzeSun9Oo2YQTKX5QI+YSeJvDZh+ph/2WAfW5W09cnuscSbwkUgZpXDedhygqVwbSNxJzSLWpOw5bnvWypB/ml1ZZ0n0w89up2DYKJQLTC26aHQHqVhHD51oefA9lAYWNjhkanPT+uincNbXmfUpP/DeNtIk4omdkFi64QjNlN7WUC85jGPEit4C+tMuWEcrAfI23spOJGrN6AXURMBJ4V1EToE+AdRB6v6kT6JaN08EoWIOgrVisiM8tcHgHLyDTox61LiGRxmEspYWhK21fgZfOCsklYAacWDaBjzQXbcqh9EDjOl4jSjxVTHv8ZIZ0TfITZD87jbhaESKE7V5TgyrXBX5gGLzfL7ThCQXWdGn0dUvBuBorBwleR9R1l5eBFfTQn895n4x0ZXXBK/GZXDwj3yi0BVumDX4SKKlGX0NbaAcqnthJr/ZUBWbAXV/SfNNsJezT4z96jRHfJ0hDbaYTl1bzc0Ih1iZWSVWVQgFNdGdP4ELTUxiUNjSA6meyWdUloFj5yR7NYWbXtCBfNeBJjMeKkKVI41Jt8mx4u4ayXTZhs9Mxmwng/GpBs/edKvFMjKrNbTBf15v635cYVJcGeUwMDSYbR7jVOARWwWsX6DiYiMvz4F95uPoxnpFAarzptp1f4qvkXeyp9c=
+    secure: "c9Zs3cxHmhVBgMa8KWmMVT+XqHN2M1nGd3Oj1+jj/vhduIjRoYmXPxsZAhEb3TKX0qK8iuWUZDIKwHWI+76RzELsvA+M802qWyf7s9PZRI0VWVS4YACgD08fWpgwlAAK+xRQ5euPrKOUTJmS6kAOqvMkWI2YMZtuufO0V9fIYBn7QND8TkuDJhtns1dlFPPpci3AGENKmhNt4AtuBO+r2gzqWUVOwvtv3C8n7LG0JxgsZykNodx2AEzHS7dC2W1Ub+GnZ5bJshB1FushLbUvLD1+c+34qfAtTh4N6HRWUfWelj3kedXr9UFaZyL7ZE5gr1RXFTOlPYBhFEkzr7ZECdsuAEiqczXlOS1r0HgsWOKyVFp8aFlPI8X1yCd5uy1bsax7MVIDWezcUMjlnM8vz59tfQQQ995eR/h8KnyKxpkCDRcaTtUxNAWBBQGiBZf4sNE4MIKE7dhA8dALJ5ytziGvQX8+Kbuw8vSnR1qFH9M7hC8djDFuf+lgSoS/mn2Xp5SDbgLnu404KkS1ogGCs2OIVGcW+GGTslEt1mwkGtXkNm1PyDlnfCN+r7hIAqj0ylJAUoMhp41sv97HufoYetNBGdFwFrUOV8JfORzlRo1/i+38un+wegPTQRsm6cwnfd59/QEhnMH+8twuRgW9iLLqdkIcxS29cl5EF/Ut89M="
+  distributions: "sdist bdist_wheel"
   on:
     tags: true
     repo: HEPData/hepdata-converter-ws
-    branch: master

@@ -63,6 +63,8 @@ def convert():
     finally:
         if os_handle:
             os.fdopen(os_handle).close()
+            if os.path.exists(tmp_output):
+                os.remove(tmp_output)
         shutil.rmtree(tmp_dir, ignore_errors=True)
         shutil.rmtree(tmp_output, ignore_errors=True)
 
