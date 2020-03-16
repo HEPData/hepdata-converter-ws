@@ -3,7 +3,6 @@ from setuptools import setup
 import re
 
 test_requirements = [
-    'flask-tests'
     'distlib',
 ]
 
