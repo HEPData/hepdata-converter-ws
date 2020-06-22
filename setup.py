@@ -30,7 +30,8 @@ setup(
     version=get_version(),
     install_requires=[
         'hepdata-converter>=0.2',
-        'flask>=1.1.1,<2'
+        'flask>=1.1.1,<2',
+        'sentry-sdk[flask]==0.15.1'
     ],
     extras_require=extras_require,
     tests_require=test_requirements,

@@ -16,6 +16,11 @@ __author__ = 'Michał Szostak'
 SINGLEFILE_FORMATS = ['root', 'yoda']
 
 
+@api.route('/debug-sentry')
+def trigger_error():
+    raise Exception('Testing that Sentry picks up this error')
+
+
 @api.route('/ping', methods=['GET'])
 def ping():
     return Response('OK')

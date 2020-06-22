@@ -108,3 +108,13 @@ class HepdataConverterWSTestCase(TMPDirMixin, ExtendedTestCase):
                 headers={'content-type': 'application/json'})
 
         self.assertTrue("did not pass validation" in str(e.exception))
+
+    def test_ping(self):
+        r = self.app_client.get('/ping')
+        self.assertTrue("OK" in str(r.data))
+
+    def test_debug_sentry(self):
+        with self.assertRaises(Exception) as e:
+            r = self.app_client.get('/debug-sentry')
+
+        self.assertTrue(str(e.exception) == "Testing that Sentry picks up this error")
