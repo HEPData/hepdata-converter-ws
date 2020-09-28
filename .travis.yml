@@ -1,7 +1,7 @@
 language: python
 
 python:
-- '3.6'
+- '3.8'
 
 sudo: required
 
@@ -25,7 +25,7 @@ after_success:
 
 before_deploy:
 - export CURRENT_PATH=`pwd`
-- docker run -v $CURRENT_PATH:$CURRENT_PATH hepdata/hepdata-converter /bin/bash -c "cd $CURRENT_PATH && rm -rf build hepdata_converter_ws.egg-info"
+- docker run -v $CURRENT_PATH:$CURRENT_PATH hepdata/hepdata-converter /bin/bash -c "cd $CURRENT_PATH && rm -rf build hepdata_converter_ws.egg-info  hepdata_converter_ws/__pycache__ hepdata_converter_ws/*/__pycache__"
 
 deploy:
   provider: pypi
