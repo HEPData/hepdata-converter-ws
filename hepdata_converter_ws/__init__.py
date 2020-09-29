@@ -1,6 +1,9 @@
 # -*- encoding: utf-8 -*-
 
 from flask.app import Flask
+import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
+
 import sys
 import hepdata_converter_ws
 from hepdata_converter_ws import version
@@ -12,6 +15,10 @@ DEBUG = True
 SECRET_KEY = 'development key'
 USERNAME = 'admin'
 PASSWORD = 'default'
+
+sentry_sdk.init(
+    integrations=[FlaskIntegration()]
+)
 
 
 def create_app(config_filename=None):
@@ -26,7 +33,7 @@ def create_app(config_filename=None):
 
 def main():
     if '-v' in sys.argv or '--version' in sys.argv:
-        print "hepdata-converter-ws version %s" % version.__version__
+        print("hepdata-converter-ws version %s" % version.__version__)
         sys.exit()
 
     app = create_app()

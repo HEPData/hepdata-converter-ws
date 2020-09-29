@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-import cStringIO
+from io import BytesIO
 from distlib._backport import tarfile
 import os
 import tarfile
@@ -27,12 +27,12 @@ class HepdataConverterWSTestCase(TMPDirMixin, ExtendedTestCase):
     def assertMultiLineAlmostEqual(self, first, second, msg=None):
         if hasattr(first, 'readlines'):
             lines = first.readlines()
-        elif isinstance(first, (str, unicode)):
+        elif isinstance(first, str):
             lines = first.split('\n')
 
         if hasattr(second, 'readlines'):
             orig_lines = second.readlines()
-        elif isinstance(second, (str, unicode)):
+        elif isinstance(second, str):
             orig_lines = second.split('\n')
 
         # Remove blank lines at end of files
@@ -43,18 +43,18 @@ class HepdataConverterWSTestCase(TMPDirMixin, ExtendedTestCase):
             orig_lines.pop()
 
         self.assertEqual(len(lines), len(orig_lines))
-        for i in xrange(len(lines)):
+        for i in range(len(lines)):
             self.assertEqual(lines[i].strip(), orig_lines[i].strip())
 
 
     @insert_data_as_tar_base64('oldhepdata/sample.input')
     @insert_path('oldhepdata/yaml')
     def test_convert(self, hepdata_input_tar, yaml_path):
-        r = self.app_client.get('/convert', data=json.dumps({'input': hepdata_input_tar,
+        r = self.app_client.get('/convert', data=json.dumps({'input': hepdata_input_tar.decode('utf-8'),
                                                       'options': {'input_format': 'oldhepdata', 'output_format': 'yaml'}}),
                          headers={'content-type': 'application/json'})
 
-        with tarfile.open(mode='r:gz', fileobj=cStringIO.StringIO(r.data)) as tar:
+        with tarfile.open(mode='r:gz', fileobj=BytesIO(r.data)) as tar:
             tar.extractall(path=self.current_tmp)
 
         self.assertDirsEqual(os.path.join(self.current_tmp, 'hepdata-converter-ws-data'), yaml_path)
@@ -78,7 +78,7 @@ class HepdataConverterWSTestCase(TMPDirMixin, ExtendedTestCase):
             }),
             headers={'content-type': 'application/json'})
 
-        with tarfile.open(mode='r:gz', fileobj=cStringIO.StringIO(r.data)) as tar:
+        with tarfile.open(mode='r:gz', fileobj=BytesIO(r.data)) as tar:
             tar.extractall(path=self.current_tmp)
 
         self.assertEqual(len(os.listdir(self.current_tmp)), 1)
@@ -107,4 +107,14 @@ class HepdataConverterWSTestCase(TMPDirMixin, ExtendedTestCase):
                 }),
                 headers={'content-type': 'application/json'})
 
-        self.assertTrue("did not pass validation" in e.exception.message)
+        self.assertTrue("did not pass validation" in str(e.exception))
+
+    def test_ping(self):
+        r = self.app_client.get('/ping')
+        self.assertTrue("OK" in str(r.data))
+
+    def test_debug_sentry(self):
+        with self.assertRaises(Exception) as e:
+            r = self.app_client.get('/debug-sentry')
+
+        self.assertTrue(str(e.exception) == "Testing that Sentry picks up this error")

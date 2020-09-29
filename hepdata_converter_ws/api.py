@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-import StringIO
+from io import BytesIO
 import base64
 import os
 import tarfile
@@ -16,6 +16,11 @@ __author__ = 'Michał Szostak'
 SINGLEFILE_FORMATS = ['root', 'yoda']
 
 
+@api.route('/debug-sentry')
+def trigger_error():
+    raise Exception('Testing that Sentry picks up this error')
+
+
 @api.route('/ping', methods=['GET'])
 def ping():
     return Response('OK')
@@ -28,7 +33,7 @@ def convert():
     archive_name = kwargs['options'].get('filename', 'hepdata-converter-ws-data')
     output_format = kwargs['options'].get('output_format', '')
 
-    output, os_handle = StringIO.StringIO(), None
+    output, os_handle = BytesIO(), None
     if output_format.lower() in SINGLEFILE_FORMATS or 'table' in kwargs['options']:
         os_handle, tmp_output = tempfile.mkstemp()
     else:
@@ -39,7 +44,7 @@ def convert():
         conversion_input = os.path.abspath(tmp_dir)
         conversion_output = os.path.abspath(tmp_output)
 
-        with tarfile.open(mode="r:gz", fileobj=StringIO.StringIO(base64.decodestring(input_tar))) as tar:
+        with tarfile.open(mode="r:gz", fileobj=BytesIO(base64.b64decode(input_tar))) as tar:
             tar.extractall(path=conversion_input)
 
         # one file - treat it as one file input format

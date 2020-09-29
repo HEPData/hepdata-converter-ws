@@ -29,8 +29,9 @@ setup(
     name='hepdata-converter-ws',
     version=get_version(),
     install_requires=[
-        'hepdata-converter>=0.1.35,<0.2',
-        'flask>=1.1.1,<2'
+        'hepdata-converter>=0.2',
+        'flask>=1.1.1,<2',
+        'sentry-sdk[flask]==0.15.1'
     ],
     extras_require=extras_require,
     tests_require=test_requirements,
@@ -48,5 +49,5 @@ setup(
     download_url='https://github.com/HEPData/hepdata-converter-ws/tarball/%s' % get_version(),
     long_description=long_description,
     long_description_content_type='text/markdown',
-    python_requires='<3'
+    python_requires='>=3.7'
 )
