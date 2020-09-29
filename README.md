@@ -8,7 +8,7 @@
 
 # hepdata-converter-ws
 
-Simple Flask Web Services wrapper (in Python 2, not yet Python 3) for
+Simple Flask Web Services wrapper in Python 3 for
 [hepdata-converter](https://github.com/HEPData/hepdata-converter).
 
 It allows running the
