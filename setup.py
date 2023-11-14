@@ -3,7 +3,7 @@ from setuptools import setup
 import re
 
 test_requirements = [
-    'distlib',
+    'coverage',
 ]
 
 extras_require = {
@@ -29,9 +29,9 @@ setup(
     name='hepdata-converter-ws',
     version=get_version(),
     install_requires=[
-        'hepdata-converter>=0.2',
-        'flask>=1.1.1,<2',
-        'sentry-sdk[flask]==0.15.1'
+        'hepdata-converter>=0.3',
+        'flask',
+        'sentry-sdk[flask]',
     ],
     extras_require=extras_require,
     tests_require=test_requirements,

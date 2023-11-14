@@ -13,7 +13,7 @@ api = Blueprint('api', __name__)
 
 __author__ = 'Michał Szostak'
 
-SINGLEFILE_FORMATS = ['root', 'yoda']
+SINGLEFILE_FORMATS = ['root', 'yoda', 'yoda1']
 
 
 @api.route('/debug-sentry')
@@ -60,6 +60,7 @@ def convert():
                                   kwargs.get('options', {}))
 
         if not os.path.isdir(conversion_output):
+            output_format = output_format[:-1] if output_format == 'yoda1' else output_format
             archive_name = archive_name + '.' + output_format
 
         with tarfile.open(mode='w:gz', fileobj=output) as tar:

@@ -1,6 +1,5 @@
 # -*- encoding: utf-8 -*-
 from io import BytesIO
-from distlib._backport import tarfile
 import os
 import tarfile
 from flask import jsonify, json
