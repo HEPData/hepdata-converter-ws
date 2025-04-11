@@ -34,7 +34,6 @@ setup(
         'sentry-sdk[flask]',
     ],
     extras_require=extras_require,
-    tests_require=test_requirements,
     entry_points={
         'console_scripts': [
             'hepdata-converter-ws = hepdata_converter_ws:main',
