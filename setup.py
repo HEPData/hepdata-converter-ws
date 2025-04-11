@@ -29,7 +29,7 @@ setup(
     name='hepdata-converter-ws',
     version=get_version(),
     install_requires=[
-        'hepdata-converter>=0.3',
+        'hepdata-converter>=0.3.1',
         'flask',
         'sentry-sdk[flask]',
     ],
