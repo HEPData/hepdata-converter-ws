@@ -45,7 +45,26 @@ def convert():
         conversion_output = os.path.abspath(tmp_output)
 
         with tarfile.open(mode="r:gz", fileobj=BytesIO(base64.b64decode(input_tar))) as tar:
-            tar.extractall(path=conversion_input)
+            def is_within_directory(directory, target):
+                
+                abs_directory = os.path.abspath(directory)
+                abs_target = os.path.abspath(target)
+            
+                prefix = os.path.commonprefix([abs_directory, abs_target])
+                
+                return prefix == abs_directory
+            
+            def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
+            
+                for member in tar.getmembers():
+                    member_path = os.path.join(path, member.name)
+                    if not is_within_directory(path, member_path):
+                        raise Exception("Attempted Path Traversal in Tar File")
+            
+                tar.extractall(path, members, numeric_owner=numeric_owner) 
+                
+            
+            safe_extract(tar, path=conversion_input)
 
         # one file - treat it as one file input format
         walked = list(os.walk(tmp_dir))
