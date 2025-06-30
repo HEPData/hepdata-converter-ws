@@ -30,7 +30,7 @@ input: Base64 encoded tar.gz file containing hepdata-converter-ws-data entry (di
 id: str used for caching purposes (same input files have to have same ID), not implemented?
 options: dictionary with options accepted by hepdata_converter.convert function. The most important are:
          input_format: (input format identifier e.g. yaml, oldhepdata, etc.)
-         output_format: (output format identifier e.g. yaml, root, yoda, yoda1, csv, etc.)
+         output_format: (output format identifier e.g. yaml, root, yoda, yoda1, yoda.h5, csv, etc.)
          other options are dependent on the input / output format and are documented in their respective parsers / readers
          in https://github.com/HEPData/hepdata-converter
 }

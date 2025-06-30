@@ -35,7 +35,7 @@ def convert():
 
     output, os_handle = BytesIO(), None
     if output_format.lower() in SINGLEFILE_FORMATS or 'table' in kwargs['options']:
-        os_handle, tmp_output = tempfile.mkstemp(suffix=output_format if output_format else '')
+        os_handle, tmp_output = tempfile.mkstemp(suffix='.'+output_format if output_format else '')
     else:
         tmp_output = tempfile.mkdtemp()
 
