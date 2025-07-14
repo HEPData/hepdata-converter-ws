@@ -13,7 +13,7 @@ api = Blueprint('api', __name__)
 
 __author__ = 'Michał Szostak'
 
-SINGLEFILE_FORMATS = ['root', 'yoda', 'yoda1']
+SINGLEFILE_FORMATS = ['root', 'yoda', 'yoda1', 'yoda.h5']
 
 
 @api.route('/debug-sentry')
@@ -35,7 +35,7 @@ def convert():
 
     output, os_handle = BytesIO(), None
     if output_format.lower() in SINGLEFILE_FORMATS or 'table' in kwargs['options']:
-        os_handle, tmp_output = tempfile.mkstemp()
+        os_handle, tmp_output = tempfile.mkstemp(suffix='.'+output_format if output_format else '')
     else:
         tmp_output = tempfile.mkdtemp()
 
